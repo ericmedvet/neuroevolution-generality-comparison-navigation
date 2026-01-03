@@ -1,0 +1,60 @@
+$testArenas = [
+  ds.arena.prepared(
+    name = u_barrier;
+    initialRobotXRange = m.range(min = 0.5; max = 0.5);
+    initialRobotYRange = m.range(min = 0.85; max = 0.85)
+  );
+  ds.arena.prepared(
+    name = standard;
+    initialRobotXRange = m.range(min = 0.15; max = 0.15);
+    initialRobotYRange = m.range(min = 0.15; max = 0.15);
+    targetXRange = m.range(min = 0.15; max = 0.15);
+    targetYRange = m.range(min = 0.9; max = 0.9)
+  );
+  ds.arena.prepared(
+    name = snake;
+    initialRobotXRange = m.range(min = 0.1; max = 0.1);
+    initialRobotYRange = m.range(min = 0.1; max = 0.1);
+    targetXRange = m.range(min = 0.9; max = 0.9);
+    targetYRange = m.range(min = 0.95; max = 0.95)
+  );
+  ds.arena.fromString(
+    name = "deceptive-corridor";
+    s = "s            |             |             |wwww     wwww             |   w w w w   |   w w w w   |   w w w w   |   w w w w   |   www w w   |   w   w w   |wwww   wwwwww|             |           t "
+  );
+  ds.arena.fromString(
+    name = "empty";
+    s = "            t|             |             |             |             |             |             |             |             |             |             |             |s            "
+  );
+  ds.arena.fromString(
+    name = "easy";
+    s = "             |             |   t         |     w       |     w       |     w  w    |     w  w    |     w  w    |     w       |     w     s |             |             |             "
+  )
+]
+
+$trainArenas = [
+  ds.arena.prepared(
+    name = empty;
+    initialRobotXRange = m.range(min = 0.2; max = 0.2);
+    initialRobotYRange = m.range(min = 0.85; max = 0.85)
+    targetXRange = m.range(min = 0.9; max = 0.9);
+    targetYRange = m.range(min = 0.15; max = 0.15)
+  );
+  ds.arena.prepared(
+    name = empty;
+    targetXRange = m.range(min = 0.2; max = 0.2);
+    targetYRange = m.range(min = 0.85; max = 0.85)
+    initialRobotXRange = m.range(min = 0.9; max = 0.9);
+    initialRobotYRange = m.range(min = 0.15; max = 0.15)
+  );
+  ds.arena.prepared(
+    name = a_barrier
+  );
+  ds.arena.prepared(
+    name = easy_maze;
+    targetXRange = m.range(min = 0.2; max = 0.2);
+    targetYRange = m.range(min = 0.85; max = 0.85)
+    initialRobotXRange = m.range(min = 0.9; max = 0.9);
+    initialRobotYRange = m.range(min = 0.15; max = 0.15)
+  )
+]

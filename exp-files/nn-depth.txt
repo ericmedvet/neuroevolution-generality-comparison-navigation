@@ -1,0 +1,49 @@
+% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal
+
+$objFun = ds.e.n.finalD()
+$dT = 0.1
+$tRange = m.range(min = 0; max = $tFinal)
+$robotRadius = 0.02
+$nOfSensors	= 7
+
+@import("imports/arenas.txt")
+@import("imports/problem.txt")
+@import("imports/ann-representation.txt")
+@import("exp-import/listeners.txt")
+
+ea.experiment(
+  runs = (randomGenerator = (seed = $seeds)
+    * [m.defaultRG()])
+    * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
+    * (representation = a.r.doubleString())
+    * (mapper = (name = ''{of.npnds.innerLayers}-{windowT}'')
+    * [
+      ea.m.enhancedNds(
+        of = ea.m.dsToNpnds(npnds = ds.num.mlp(innerLayers = [8]));
+        windowT = 0.5
+      )
+      ])
+    * [
+        $ga
+      ])
+    * [ea.run(
+        problem = ea.p.totalOrder(
+          qFunction = $trainFun;
+          example = ds.misc.simExample(
+            simulation = ds.sat.fromEnvironment(
+              environment = ds.e.navigation(
+                nOfSensors = $nOfSensors; robotRadius = $robotRadius;
+                arena = m.nth(n = -1; values = $testArenas)
+              );
+              dT = $dT;
+              tRange = $tRange
+            )
+          )
+        )
+      )];
+  listeners = [
+    $consoleL;
+    $qPlotL; $valPlotL;
+    $bestTestTrajsSaverL
+  ]
+)

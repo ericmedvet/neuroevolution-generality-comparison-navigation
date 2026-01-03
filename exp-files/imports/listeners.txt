@@ -1,0 +1,14 @@
+$testPerfs = (of = (simulation = $testSims)
+  * [ds.f.simulate(of = ea.f.solution(of = ea.f.best()))])
+  * [f.composition(then = $objFun)]
+$trainPerfs = (of = (simulation = $trainSims)
+  * [ds.f.simulate(of = ea.f.solution(of = ea.f.best()))])
+  * [f.composition(then = $objFun)]
+$allPerfs = $testPerfs + $trainPerfs
+
+$consoleL = ea.l.console(
+  functions = [
+    ea.f.quality(of = ea.f.best(); format = "%6.4f")
+  ] + $allPerfs;
+  onlyLast = false
+)

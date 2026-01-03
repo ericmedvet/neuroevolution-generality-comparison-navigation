@@ -1,0 +1,3 @@
+$ga = ea.s.ga(
+  name = ''ga-{mapper.name}''
+)

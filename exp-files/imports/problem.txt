@@ -1,0 +1,26 @@
+$trainSims = (environment = (arena = $trainArenas)
+* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
+* [ds.sat.fromEnvironment(dT = $dT; tRange = $tRange)]
+
+$lastSim = m.nth(n = -1; values = $trainSims)
+
+$testSims = (environment = (arena = $testArenas)
+* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
+* [ds.sat.fromEnvironment(dT = $dT; tRange = $tRange)]
+
+$lastQFun = f.as(name = last; of = f.composition(
+  of = ds.f.simulate(simulation = $lastSim);
+  then = $objFun
+))
+
+$trainQFun = f.as(name = train; of = f.avg(
+  of = f.all(fs = (of = (simulation = $curriculumSims)
+  * [ds.f.simulate()])
+  * [f.composition(then = $objFun)])  
+))
+
+$testQFun = f.as(name = test; of = f.avg(
+  of = f.all(fs = (of = (simulation = $testSims)
+  * [ds.f.simulate()])
+  * [f.composition(then = $objFun)])  
+))
