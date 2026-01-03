@@ -1,10 +1,11 @@
 % REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal
 
-$objFun = ds.e.n.finalD()
+$qFun = ds.e.n.finalD()
 $dT = 0.1
 $tRange = m.range(min = 0; max = $tFinal)
 $robotRadius = 0.02
 $nOfSensors	= 7
+$qAggregator = f.avg()
 
 @import("imports/arenas.txt")
 @import("imports/problem.txt")
@@ -28,22 +29,11 @@ ea.experiment(
     * [
         $ga
       ])
-    * [ea.run(
-        problem = ea.p.functionToTo(
-          qFunction = $trainQFun;
-          example = ds.misc.simExample(
-            simulation = ds.sat.fromEnvironment(
-              environment = ds.e.navigation(
-                nOfSensors = $nOfSensors; robotRadius = $robotRadius;
-                arena = m.nth(n = -1; values = $testArenas)
-              )
-            )
-          )
-        )
-      )];
+    * [ea.run(problem = $problem)];
   listeners = [
     $consoleL;
-    $qPlotL;
+    $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
+    $testAvgQPlotL;
     $bestTrainTrajsSaverL;
     $bestTestTrajsSaverL
   ]
