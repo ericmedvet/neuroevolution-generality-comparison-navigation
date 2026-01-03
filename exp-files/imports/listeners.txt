@@ -1,12 +1,11 @@
 $basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
 $showSensors = true
 
+$allTrainOutcomesF = f.each(mapF = $qFun; of = ea.f.quality(of = ea.f.best()))
+
 $consoleL = ea.l.console(
   eFunctions = [
-    f.composition(
-      of = ea.f.quality(of = ea.f.best());
-      then = $qAggregator      
-    )
+    f.composition(of = $allTrainOutcomesF; then = $qAggregator)
   ];
   onlyLast = false
 )
@@ -14,10 +13,7 @@ $consoleL = ea.l.console(
 $trainQPlotL = ea.l.savePlotForExp(
   path = $basePath + "best-train-quality.svg";
   plot = ea.plot.multi.xyExp(
-    y = f.composition(
-      of = ea.f.quality(of = ea.f.best());
-      then = $qAggregator
-    );
+    y = f.composition(of = $allTrainOutcomesF; then = $qAggregator);
     yRange = m.range(min = 0; max = 1)
   );
   type = svg
@@ -26,7 +22,7 @@ $trainQPlotL = ea.l.savePlotForExp(
 $trainMinQPlotL = ea.l.savePlotForExp(
   path = $basePath + "best-train-min-q.svg";
   plot = ea.plot.multi.xyExp(
-    y = f.min(of = ea.f.quality(of = ea.f.best()));
+    y = f.min(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
   type = svg
@@ -35,7 +31,7 @@ $trainMinQPlotL = ea.l.savePlotForExp(
 $trainMaxQPlotL = ea.l.savePlotForExp(
   path = $basePath + "best-train-max-q.svg";
   plot = ea.plot.multi.xyExp(
-    y = f.max(of = ea.f.quality(of = ea.f.best()));
+    y = f.max(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
   type = svg

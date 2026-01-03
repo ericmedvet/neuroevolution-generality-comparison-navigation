@@ -33,7 +33,7 @@ ea.experiment(
   listeners = [
     $consoleL;
     $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
-    $testAvgQPlotL;
+    $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
     $bestTrainTrajsSaverL;
     $bestTestTrajsSaverL
   ]
