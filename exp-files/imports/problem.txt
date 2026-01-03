@@ -9,8 +9,11 @@ $problem = ea.p.manyToCbto(
   * [ea.p.simToTo(
       dT = $dT;
       tRange = $tRange;
-      qFunction = $qFun;
-      comparator = ea.comparator.ascending()
+      qFunction = f.identity();
+      comparator = ea.comparator.ascending(of = $qFun)
     )];
-  comparator = ea.comparator.ascending(of = $qAggregator)          
+  comparator = ea.comparator.ascending(of = f.composition(
+    of = f.each(mapF = $qFun);
+    then = $qAggregator
+  ))          
 )

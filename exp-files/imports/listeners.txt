@@ -5,8 +5,7 @@ $consoleL = ea.l.console(
   eFunctions = [
     f.composition(
       of = ea.f.quality(of = ea.f.best());
-      then = $qAggregator;
-      format = "%6.4f"
+      then = $qAggregator      
     )
   ];
   onlyLast = false
@@ -51,9 +50,9 @@ $testSims = (environment = (arena = $testArenas)
 * [ds.sat.fromEnvironment()]
 
 $allTestOutcomesF = f.each(
+  name = "test.arenas";
   mapF = $qFun;
-  of = f.all(
-    name = "test.arenas";
+  of = f.all(    
     of = ea.f.solution(of = ea.f.best());
     fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
   )
