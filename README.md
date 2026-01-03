@@ -9,7 +9,7 @@ Software artifacts related to a research on what factors impact on the generaliz
 The binary of [JGEA](https://github.com/ericmedvet/jgea), the evolutionary framework these experiments are based on, is already available in this repo.
 
 ### Experiment: impact of the depth of the NN
-``shell
+```shell
 java \
   -jar jgea.jar \
   -nt 16 -nr 1 \
