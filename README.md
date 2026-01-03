@@ -12,7 +12,7 @@ The binary of [JGEA](https://github.com/ericmedvet/jgea), the evolutionary frame
 ```shell
 java \
   -jar jgea.jar \
-  -nt 16 -nr 1 \
+  -nt 16 -nr 4 \
   -f exp-files/nn-depth.txt \
   --expHeadLines \
     '$tFinal = 60' \

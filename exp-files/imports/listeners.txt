@@ -1,3 +1,6 @@
+$basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
+$showSensors = true
+
 $testPerfs = (of = (simulation = $testSims)
   * [ds.f.simulate(
       of = ea.f.solution(of = ea.f.best());
@@ -17,4 +20,36 @@ $consoleL = ea.l.console(
     ea.f.quality(of = ea.f.best(); format = "%6.4f")
   ] + $allPerfs;
   onlyLast = false
+)
+
+$qPlotL = ea.l.savePlotAndCsvForExp(
+  path = $basePath + "best-quality.svg";
+  plot = ea.plot.single.quality(yRange = m.range(min = 0; max = 1));
+  type = svg
+)
+
+$bestTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-train-trajs.svg";
+  of = ea.acc.lastBest();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = svg
+  )
+)
+
+$bestTestTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-test-trajs.svg";
+  of = ea.acc.lastBest();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = svg
+  )
 )

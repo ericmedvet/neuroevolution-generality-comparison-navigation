@@ -17,12 +17,14 @@ ea.experiment(
     * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
     * (representation = ea.r.doubleString())
     * (mapper = (name = ''{of.parametrized.innerLayers}-{windowT}'')
-    * [
-      ea.m.enhancedNds(
-        of = ea.m.dsToParametrized(parametrized = ds.num.mlp(innerLayers = [8]));
-        windowT = 0.5
-      )
-      ])
+    * (of = (parametrized = [
+      ds.num.mlp(innerLayers = []);
+      ds.num.mlp(innerLayers = [8]);
+      ds.num.mlp(innerLayers = [8; 8]);
+      ds.num.mlp(innerLayers = [8; 8; 8])
+    ])
+    * [ea.m.dsToParametrized()])
+    * [ea.m.enhancedNds(windowT = 0.5)])
     * [
         $ga
       ])
@@ -40,6 +42,9 @@ ea.experiment(
         )
       )];
   listeners = [
-    $consoleL
+    $consoleL;
+    $qPlotL;
+    $bestTrainTrajsSaverL;
+    $bestTestTrajsSaverL
   ]
 )
