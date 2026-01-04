@@ -16,7 +16,7 @@ java \
   -f exp-files/nn-depth.txt \
   --expHeadLines \
     '$tFinal = 60' \
-    '$nOfEvals = 20000' \
+    '$nOfEvals = 30000' \
     '$seeds = [1:1:10]'
 ```
 
@@ -59,7 +59,7 @@ java \
   -f exp-files/nn-depth.txt \
   --expHeadLines \
     '$tFinal = 60' \
-    '$nOfEvals = 20000' \
+    '$nOfEvals = 30000' \
     '$seeds = [1:1:10]'
 ```
 

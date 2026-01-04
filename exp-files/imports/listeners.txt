@@ -45,12 +45,14 @@ $testSims = (environment = (arena = $testArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
 
-$allTestOutcomesF = f.each(
+$allTestOutcomesF = f.as(
   name = "test.arenas";
-  mapF = $qFun;
-  of = f.all(    
-    of = ea.f.solution(of = ea.f.best());
-    fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+  of = f.each(
+    mapF = $qFun;
+    of = f.all(    
+      of = ea.f.solution(of = ea.f.best());
+      fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    )
   )
 )
 
