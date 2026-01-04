@@ -94,3 +94,13 @@ On test arenas:
 ![Test trajectories](results/nn-width.txt/ga-[32]-0.5-01/best-test-trajs.svg)
 
 ### Experiment: impact of memory size
+```shell
+java \
+  -jar jgea.jar \
+  -nt 16 -nr 4 \
+  -f exp-files/ds-memory.txt \
+  --expHeadLines \
+    '$tFinal = 60' \
+    '$nOfEvals = 30000' \
+    '$seeds = [1:1:10]'
+```
