@@ -17,20 +17,21 @@ java \
   --expHeadLines \
     '$tFinal = 60' \
     '$nOfEvals = 20000' \
-    '$seeds = [1:1:30]'
+    '$seeds = [1:1:10]'
 ```
 
 #### Plots
 
 On training arenas:
-![Avg Q progression](results/nn-depth.txt/best-train-quality.svg)
-![Min Q progression](results/nn-depth.txt/best-train-min-q.svg)
-![Max Q progression](results/nn-depth.txt/best-train-max-q.svg)
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/nn-depth.txt/best-train-quality.svg)|![Min Q progression](results/nn-depth.txt/best-train-min-q.svg)|![Max Q progression](results/nn-depth.txt/best-train-max-q.svg)|
 
 On test arenas:
-![Avg Q progression](results/nn-depth.txt/best-test-avg-q.svg)
-![Min Q progression](results/nn-depth.txt/best-test-min-q.svg)
-![Max Q progression](results/nn-depth.txt/best-test-max-q.svg)
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/nn-depth.txt/best-test-avg-q.svg)|![Min Q progression](results/nn-depth.txt/best-test-min-q.svg)|![Max Q progression](results/nn-depth.txt/best-test-max-q.svg)|
+
 
 #### Examples (seed 1)
 
@@ -59,6 +60,36 @@ java \
   --expHeadLines \
     '$tFinal = 60' \
     '$nOfEvals = 20000' \
-    '$seeds = [1:1:30]'
+    '$seeds = [1:1:10]'
 ```
+
+#### Plots
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/nn-width.txt/best-train-quality.svg)|![Min Q progression](results/nn-width.txt/best-train-min-q.svg)|![Max Q progression](results/nn-width.txt/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/nn-width.txt/best-test-avg-q.svg)|![Min Q progression](results/nn-width.txt/best-test-min-q.svg)|![Max Q progression](results/nn-width.txt/best-test-max-q.svg)|
+
+#### Examples (seed 1)
+
+`[4]` (no inner layers)
+![Train trajectories](results/nn-width.txt/ga-[4]-0.5-01/best-train-trajs.svg)
+![Test trajectories](results/nn-width.txt/ga-[4]-0.5-01/best-test-trajs.svg)
+
+`[8]`
+![Train trajectories](results/nn-width.txt/ga-[8]-0.5-01/best-train-trajs.svg)
+![Test trajectories](results/nn-width.txt/ga-[8]-0.5-01/best-test-trajs.svg)
+
+`[16]`
+![Train trajectories](results/nn-width.txt/ga-[16]-0.5-01/best-train-trajs.svg)
+![Test trajectories](results/nn-width.txt/ga-[16]-0.5-01/best-test-trajs.svg)
+
+`[32]`
+![Train trajectories](results/nn-width.txt/ga-[32]-0.5-01/best-train-trajs.svg)
+![Test trajectories](results/nn-width.txt/ga-[32]-0.5-01/best-test-trajs.svg)
 
