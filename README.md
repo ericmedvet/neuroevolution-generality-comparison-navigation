@@ -93,3 +93,4 @@ On test arenas:
 ![Train trajectories](results/nn-width.txt/ga-[32]-0.5-01/best-train-trajs.svg)
 ![Test trajectories](results/nn-width.txt/ga-[32]-0.5-01/best-test-trajs.svg)
 
+### Experiment: impact of memory size
