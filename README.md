@@ -151,4 +151,37 @@ java \
     '$seeds = [1:1:10]'
 ```
 
+#### Plots
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/mut-sigma.txt/best-train-quality.svg)|![Min Q progression](results/mut-sigma.txt/best-train-min-q.svg)|![Max Q progression](results/mut-sigma.txt/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/mut-sigma.txt/best-test-avg-q.svg)|![Min Q progression](results/mut-sigma.txt/best-test-min-q.svg)|![Max Q progression](results/mut-sigma.txt/best-test-max-q.svg)|
+
+#### Examples (seed 1)
+
+0.05
+![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.05-01/best-train-trajs.svg>)
+![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.05-01/best-test-trajs.svg>)
+
+0.10
+![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.10-01/best-train-trajs.svg>)
+![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.10-01/best-test-trajs.svg>)
+
+0.20
+![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.20-01/best-train-trajs.svg>)
+![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.20-01/best-test-trajs.svg>)
+
+0.35
+![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.35-01/best-train-trajs.svg>)
+![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.35-01/best-test-trajs.svg>)
+
+0.50
+![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.50-01/best-train-trajs.svg>)
+![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.50-01/best-test-trajs.svg>)
 
