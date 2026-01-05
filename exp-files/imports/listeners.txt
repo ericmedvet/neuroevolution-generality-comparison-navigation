@@ -1,4 +1,5 @@
 $basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
+$imgType = svg
 $showSensors = true
 
 $allTrainOutcomesF = f.each(mapF = $qFun; of = ea.f.quality(of = ea.f.best()))
@@ -11,30 +12,30 @@ $consoleL = ea.l.console(
 )
 
 $trainQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-train-quality.svg";
+  path = $basePath + "best-train-quality." + $imgType;
   plot = ea.plot.multi.xyExp(
     y = f.composition(of = $allTrainOutcomesF; then = $qAggregator);
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $trainMinQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-train-min-q.svg";
+  path = $basePath + "best-train-min-q." + $imgType;
   plot = ea.plot.multi.xyExp(
     y = f.min(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $trainMaxQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-train-max-q.svg";
+  path = $basePath + "best-train-max-q." + $imgType;
   plot = ea.plot.multi.xyExp(
     y = f.max(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $trainSims = (environment = (arena = $trainArenas)
@@ -45,46 +46,46 @@ $testSims = (environment = (arena = $testArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
 
-$allTestOutcomesF = f.as(
-  name = "test.arenas";
-  of = f.each(
-    mapF = $qFun;
-    of = f.all(    
-      of = ea.f.solution(of = ea.f.best());
+$allTestOutcomesF = f.cached(of = f.each(
+  mapF = $qFun;
+  of = f.as(
+    name = "test.arenas";
+    of = f.all(
+      of = ea.f.solution();
       fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
     )
   )
-)
+))
 
 $testAvgQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-test-avg-q.svg";
+  path = $basePath + "best-test-avg-q." + $imgType;
   plot = ea.plot.multi.xyExp(
-    y = f.avg(of = $allTestOutcomesF);
+    y = f.avg(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $testMinQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-test-min-q.svg";
+  path = $basePath + "best-test-min-q." + $imgType;
   plot = ea.plot.multi.xyExp(
-    y = f.min(of = $allTestOutcomesF);
+    y = f.min(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $testMaxQPlotL = ea.l.savePlotForExp(
-  path = $basePath + "best-test-max-q.svg";
+  path = $basePath + "best-test-max-q." + $imgType;
   plot = ea.plot.multi.xyExp(
-    y = f.max(of = $allTestOutcomesF);
+    y = f.max(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
-  type = svg
+  type = $imgType
 )
 
 $bestTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-train-trajs.svg";
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-train-trajs." + $imgType;
   of = ea.acc.lastBest();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -92,12 +93,12 @@ $bestTrainTrajsSaverL = ea.l.saveForRun(
       of = ea.f.solution();
       fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
     );
-    type = svg
+    type = $imgType
   )
 )
 
 $bestTestTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-test-trajs.svg";
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-test-trajs." + $imgType;
   of = ea.acc.lastBest();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -105,6 +106,133 @@ $bestTestTrajsSaverL = ea.l.saveForRun(
       of = ea.f.solution();
       fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
     );
-    type = svg
+    type = $imgType
   )
+)
+
+$finalTrainQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-best-train-quality." + $imgType;
+  plot = ea.plot.multi.yBoxplotExp(y = f.composition(of = $allTrainOutcomesF; then = $qAggregator));
+  type = $imgType
+)
+
+$finalTestQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-best-test-avg-q." + $imgType;
+  plot = ea.plot.multi.yBoxplotExp(y = f.avg(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF)));
+  type = $imgType
+)
+
+$finalMinTestQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-min-test-avg-q." + $imgType;
+  plot = ea.plot.multi.yBoxplotExp(
+    y = f.min(of = f.each(
+      of = ea.f.all();
+      mapF = f.avg(of = $allTestOutcomesF) 
+    ))
+  );
+  type = $imgType
+)
+
+$archivesP = ea.l.savePlotForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/me-archives." + $imgType;
+  plot = ea.plot.single.me(values = [
+    f.composition(of = f.each(of = ea.f.quality(); mapF = $qFun); then = $qAggregator);
+    f.avg(of = $allTestOutcomesF)
+  ]);
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*");
+  type = $imgType
+)
+
+$archiveLLTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-ll-train-trajs." + $imgType;
+  of = acc.last();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution(of = f.first(of = f.sortedBy(
+        of = ea.f.all();
+        by = f.mathOp(
+          op = add;
+          args = [
+            ea.function.meBin(of = f.nTh(n = 0; of = ea.f.meCoordinates()));
+            ea.function.meBin(of = f.nTh(n = 1; of = ea.f.meCoordinates()))
+          ]
+        )
+      )));
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  );
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*")
+)
+
+$archiveHHTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-hh-train-trajs." + $imgType;
+  of = acc.last();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution(of = f.first(of = f.sortedBy(
+        of = ea.f.all();
+        reversed = true;
+        by = f.mathOp(
+          op = add;
+          args = [
+            ea.function.meBin(of = f.nTh(n = 0; of = ea.f.meCoordinates()));
+            ea.function.meBin(of = f.nTh(n = 1; of = ea.f.meCoordinates()))
+          ]
+        )
+      )));
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  );
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*")
+)
+
+$archiveLHTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-lh-train-trajs." + $imgType;
+  of = acc.last();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution(of = f.first(of = f.sortedBy(
+        of = ea.f.all();
+        by = f.mathOp(
+          op = subtract;
+          args = [
+            ea.function.meBin(of = f.nTh(n = 0; of = ea.f.meCoordinates()));
+            ea.function.meBin(of = f.nTh(n = 1; of = ea.f.meCoordinates()))
+          ]
+        )
+      )));
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  );
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*")
+)
+
+$archiveHLTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-hl-train-trajs." + $imgType;
+  of = acc.last();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution(of = f.first(of = f.sortedBy(
+        of = ea.f.all();
+        reversed = true;
+        by = f.mathOp(
+          op = subtract;
+          args = [
+            ea.function.meBin(of = f.nTh(n = 0; of = ea.f.meCoordinates()));
+            ea.function.meBin(of = f.nTh(n = 1; of = ea.f.meCoordinates()))
+          ]
+        )
+      )));
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  );
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*")
 )

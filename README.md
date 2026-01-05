@@ -185,3 +185,15 @@ On test arenas:
 ![Train trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.50-01/best-train-trajs.svg>)
 ![Test trajectories](<results/mut-sigma.txt/ga-[8, 8, 8]-0.5 sm=0.50-01/best-test-trajs.svg>)
 
+### Experiment: impact of EA
+```shell
+java \
+  -jar jgea.jar \
+  -nt 16 -nr 4 \
+  -f exp-files/ea.txt \
+  --expHeadLines \
+    '$tFinal = 60' \
+    '$nOfEvals = 40000' \
+    '$seeds = [1:1:10]'
+```
+

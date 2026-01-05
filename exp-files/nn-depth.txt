@@ -26,9 +26,7 @@ ea.experiment(
     ])
     * [ea.m.dsToParametrized()])
     * [ea.m.enhancedNds(windowT = 0.5)])
-    * [
-        $ga
-      ])
+    * [$ga])
     * [ea.run(problem = $problem)];
   listeners = [
     $consoleL;

@@ -16,19 +16,21 @@ ea.experiment(
   runs = (randomGenerator = (seed = $seeds)
     * [m.defaultRG()])
     * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
-    * (representation = ea.r.doubleString())
-    * (mapper = (name = ''{of.parametrized.innerLayers}-{windowT}'')
-    * (of = (parametrized = [ds.num.mlp(innerLayers = [8; 8; 8])])
-    * [ea.m.dsToParametrized()])
-    * (windowT = [0.1; 0.5; 1; 2; 5])
-    * [ea.m.enhancedNds()])
-    * [$ga])
+    * (representation = ea.r.doubleString(mutations	 = [ea.r.go.dsGaussianMutation(sigmaMut = 0.1)]))
+    * (mapper = ea.m.enhancedNds(
+        name = ''{of.parametrized.innerLayers}-{windowT}'';
+        of = ea.m.dsToParametrized(parametrized = ds.num.mlp(innerLayers = [8; 8; 8]));
+        windowT = 0.5
+      ))
+    * [$ga; $mePos; $meBehav])
     * [ea.run(problem = $problem)];
   listeners = [
     $consoleL;
     $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
     $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
-    $bestTrainTrajsSaverL;
-    $bestTestTrajsSaverL
+    $finalTrainQPlotL; $finalTestQPlotL; $finalMinTestQPlotL;
+    $bestTrainTrajsSaverL; $bestTestTrajsSaverL;
+    $archiveLLTrainTrajsSaverL; $archiveLHTrainTrajsSaverL; $archiveHLTrainTrajsSaverL; $archiveHHTrainTrajsSaverL;
+    $archivesP
   ]
 )

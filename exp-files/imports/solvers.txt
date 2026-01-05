@@ -1,3 +1,37 @@
-$ga = ea.s.ga(
-  name = ''ga-{mapper.name}''
+$trajRegularity = f.as(
+  name = regularity;
+  of = f.mathOp(
+    op = divide;
+    args = [
+      ea.f.size(of = ds.e.n.symbolicTrajectory(collapse = true));
+      ea.f.size(of = ds.e.n.symbolicTrajectory(collapse = false))
+    ]
+  )
+)
+
+$rightGap = f.as(
+  name = "right.gap";
+  of = ds.e.n.avgGapToObstacle()
+)
+
+$finalX = ds.e.n.x(of = ds.e.n.finalRobotP())
+
+$finalY = ds.e.n.y(of = ds.e.n.finalRobotP())
+
+$ga = ea.s.ga(name = ''ga-{mapper.name}'')
+
+$mePos = ea.s.mapElites(
+  name = "me.pos";
+  descriptors = (nOfBins = 10) * [
+    ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalX)); min = 0; max = 1);
+    ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalY)); min = 0; max = 1)
+  ]
+)
+
+$meBehav = ea.s.mapElites(
+  name = "me.behav";
+  descriptors = (nOfBins = 10) * [
+    ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $trajRegularity)); min = 0.2; max = 0.75);
+    ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $rightGap)); min = 0.2; max = 0.75)
+  ]
 )
