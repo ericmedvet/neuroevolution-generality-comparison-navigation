@@ -197,3 +197,98 @@ java \
     '$seeds = [1:1:10]'
 ```
 
+#### Plots
+
+##### Short (40k evaluations)
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/ea.txt/short/best-train-quality.svg)|![Min Q progression](results/ea.txt/short/best-train-min-q.svg)|![Max Q progression](results/ea.txt/short/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/ea.txt/short/best-test-avg-q.svg)|![Min Q progression](results/ea.txt/short/best-test-min-q.svg)|![Max Q progression](results/ea.txt/short/best-test-max-q.svg)|
+
+Final best avg Q on test:
+![Avg Q progression](results/ea.txt/short/final-best-test-avg-q.svg)
+
+Final min (in the population) avg Q on test:
+![Avg Q progression](results/ea.txt/short/final-min-test-avg-q.svg)
+
+##### Long (200k evaluations)
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/ea.txt/long/best-train-quality.svg)|![Min Q progression](results/ea.txt/long/best-train-min-q.svg)|![Max Q progression](results/ea.txt/long/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/ea.txt/long/best-test-avg-q.svg)|![Min Q progression](results/ea.txt/long/best-test-min-q.svg)|![Max Q progression](results/ea.txt/long/best-test-max-q.svg)|
+
+Final best avg Q on test:
+![Avg Q progression](results/ea.txt/long/final-best-test-avg-q.svg)
+
+Final min (in the population) avg Q on test:
+![Avg Q progression](results/ea.txt/long/final-min-test-avg-q.svg)
+
+#### Examples (200k evaluations)
+
+##### GA
+
+![Train trajectories](<results/ea.txt/long/ga-[8, 8, 8]-0.5-01/best-train-trajs.svg>)
+![Test trajectories](<results/ea.txt/long/ga-[8, 8, 8]-0.5-01/best-test-trajs.svg>)
+
+##### ME with final position descriptors
+
+Descriptors:
+1. average (on arenas) of final x of the robot
+2. average (on arenas) of final y of the robot
+
+Best:
+![Train trajectories](results/ea.txt/long/me.pos-01/best-train-trajs.svg)
+![Test trajectories](results/ea.txt/long/me.pos-01/best-test-trajs.svg)
+
+Archive:
+![Archive](results/ea.txt/long/me.pos-01/me-archives.svg)
+
+low-low archive individual on training:
+![Train trajectories](results/ea.txt/long/me.pos-01/archive-ll-train-trajs.svg)
+
+low-high archive individual on training:
+![Train trajectories](results/ea.txt/long/me.pos-01/archive-lh-train-trajs.svg)
+
+high-low archive individual on training:
+![Train trajectories](results/ea.txt/long/me.pos-01/archive-hl-train-trajs.svg)
+
+high-high archive individual on training:
+![Train trajectories](results/ea.txt/long/me.pos-01/archive-hh-train-trajs.svg)
+
+##### ME with trajectory descriptors
+
+Descriptors:
+1. average (on arenas) of trajectory regularity: rate between length of symbolic trajectory w/o repetitions and with repetitions (low = high regularity; high = low regularity)
+2. average (on arenas) of gap on right: average during the similation of distance to the closest obstacle on the right
+
+Best:
+![Train trajectories](results/ea.txt/long/me.behav-01/best-train-trajs.svg)
+![Test trajectories](results/ea.txt/long/me.behav-01/best-test-trajs.svg)
+
+Archive:
+![Archive](results/ea.txt/long/me.behav-01/me-archives.svg)
+
+low-low archive individual on training:
+![Train trajectories](results/ea.txt/long/me.behav-01/archive-ll-train-trajs.svg)
+
+low-high archive individual on training:
+![Train trajectories](results/ea.txt/long/me.behav-01/archive-lh-train-trajs.svg)
+
+high-low archive individual on training:
+![Train trajectories](results/ea.txt/long/me.behav-01/archive-hl-train-trajs.svg)
+
+high-high archive individual on training:
+![Train trajectories](results/ea.txt/long/me.behav-01/archive-hh-train-trajs.svg)
+
