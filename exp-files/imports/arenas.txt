@@ -69,3 +69,37 @@ $trainArenas = [
     s = "             | s           |             |             |             |             |             |   w         |   w         |   w     w   |   wwwwwww   |             |         t   "
   )
 ]
+
+$trainArenasL = $trainArenas + [
+  ds.arena.prepared(
+    name = c_barrier;
+    targetXRange = m.range(min = 0.7; max = 0.9);
+    targetYRange = m.range(min = 0.1; max = 0.3);
+    initialRobotXRange = m.range(min = 0.1; max = 0.3);
+    initialRobotYRange = m.range(min = 0.8; max = 0.9)
+  );
+  ds.arena.prepared(
+    name = c_barrier;
+    targetXRange = m.range(min = 0.2; max = 0.4);
+    targetYRange = m.range(min = 0.1; max = 0.3);
+    initialRobotXRange = m.range(min = 0.7; max = 0.8);
+    initialRobotYRange = m.range(min = 0.6; max = 0.7)
+  )
+]
+
+$trainArenasXL = $trainArenasL + [
+  ds.arena.prepared(
+    name = y_maze;
+    targetXRange = m.range(min = 0.5; max = 0.5);
+    targetYRange = m.range(min = 0.7; max = 0.9);
+    initialRobotXRange = m.range(min = 0.4; max = 0.6);
+    initialRobotYRange = m.range(min = 0.1; max = 0.15)
+  );
+  ds.arena.prepared(
+    name = flat_maze;
+    targetXRange = m.range(min = 0.5; max = 0.5);
+    targetYRange = m.range(min = 0.1; max = 0.1);
+    initialRobotXRange = m.range(min = 0.4; max = 0.6);
+    initialRobotYRange = m.range(min = 0.9; max = 0.95)
+  )
+]

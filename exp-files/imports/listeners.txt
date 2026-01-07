@@ -42,6 +42,10 @@ $trainSims = (environment = (arena = $trainArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
 
+$trainSimsXL = (environment = (arena = $trainArenasXL)
+* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
+* [ds.sat.fromEnvironment()]
+
 $testSims = (environment = (arena = $testArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
@@ -85,7 +89,7 @@ $testMaxQPlotL = ea.l.savePlotForExp(
 )
 
 $bestTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-train-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-train-trajs." + $imgType;
   of = ea.acc.lastBest();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -97,8 +101,21 @@ $bestTrainTrajsSaverL = ea.l.saveForRun(
   )
 )
 
+$bestTrainXLTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-train-xl-trajs." + $imgType;
+  of = ea.acc.lastBest();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $trainSimsXL) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  )
+)
+
 $bestTestTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/best-test-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-test-trajs." + $imgType;
   of = ea.acc.lastBest();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -134,7 +151,7 @@ $finalMinTestQPlotL = ea.l.savePlotForExp(
 )
 
 $archivesP = ea.l.savePlotForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/me-archives." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/me-archives." + $imgType;
   plot = ea.plot.single.me(values = [
     f.composition(of = f.each(of = ea.f.quality(); mapF = $qFun); then = $qAggregator);
     f.avg(of = $allTestOutcomesF)
@@ -144,7 +161,7 @@ $archivesP = ea.l.savePlotForRun(
 )
 
 $archiveLLTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-ll-train-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/archive-ll-train-trajs." + $imgType;
   of = acc.last();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -167,7 +184,7 @@ $archiveLLTrainTrajsSaverL = ea.l.saveForRun(
 )
 
 $archiveHHTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-hh-train-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/archive-hh-train-trajs." + $imgType;
   of = acc.last();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -191,7 +208,7 @@ $archiveHHTrainTrajsSaverL = ea.l.saveForRun(
 )
 
 $archiveLHTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-lh-train-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/archive-lh-train-trajs." + $imgType;
   of = acc.last();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
@@ -214,7 +231,7 @@ $archiveLHTrainTrajsSaverL = ea.l.saveForRun(
 )
 
 $archiveHLTrainTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/archive-hl-train-trajs." + $imgType;
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/archive-hl-train-trajs." + $imgType;
   of = acc.last();
   processor = viz.f.toMultiImage(
     drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);

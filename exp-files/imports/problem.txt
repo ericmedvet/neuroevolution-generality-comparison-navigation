@@ -1,19 +1,44 @@
-$problem = ea.p.manyToCbto(
-  name = "train.arenas";
-  problems = (simulation = (environment = (arena = $trainArenas)
-  * [ds.e.navigation(
-      nOfSensors = $nOfSensors;
-      robotRadius = $robotRadius
-    )])
-  * [ds.sat.fromEnvironment()])
-  * [ea.p.simToTo(
-      dT = $dT;
-      tRange = $tRange;
-      qFunction = f.identity();
-      comparator = ea.comparator.ascending(of = $qFun)
-    )];
-  comparator = ea.comparator.ascending(of = f.composition(
-    of = f.each(mapF = $qFun);
-    then = $qAggregator
-  ))          
+$environment = ds.e.navigation(
+  nOfSensors = $nOfSensors;
+  robotRadius = $robotRadius
 )
+
+$simToTo = ea.p.simToTo(
+  dT = $dT;
+  tRange = $tRange;
+  qFunction = f.identity();
+  comparator = ea.comparator.ascending(of = $qFun)
+)
+
+$comparator = ea.comparator.ascending(of = f.composition(
+  of = f.each(mapF = $qFun);
+  then = $qAggregator
+))
+
+$problem = ea.p.manyToCbto(
+  name = "train";
+  problems = (simulation = (environment = (arena = $trainArenas)
+  * [$environment])
+  * [ds.sat.fromEnvironment()])
+  * [$simToTo];
+  comparator = $comparator
+)
+
+$problemL = ea.p.manyToCbto(
+  name = "train.l";
+  problems = (simulation = (environment = (arena = $trainArenasL)
+  * [$environment])
+  * [ds.sat.fromEnvironment()])
+  * [$simToTo];
+  comparator = $comparator
+)
+
+$problemXL = ea.p.manyToCbto(
+  name = "train.xl";
+  problems = (simulation = (environment = (arena = $trainArenasXL)
+  * [$environment])
+  * [ds.sat.fromEnvironment()])
+  * [$simToTo];
+  comparator = $comparator
+)
+
