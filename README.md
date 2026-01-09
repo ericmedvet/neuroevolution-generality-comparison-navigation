@@ -292,7 +292,7 @@ high-low archive individual on training:
 high-high archive individual on training:
 ![Train trajectories](results/ea.txt/long/me.behav-01/archive-hh-train-trajs.svg)
 
-### Experiment: impact of mutation sigma
+### Experiment: impact of training size
 ```shell
 java \
   -jar jgea.jar \
@@ -304,4 +304,40 @@ java \
     '$nOfEvals = 200000' \
     '$seeds = [1:1:10]'
 ```
+
+Number of arenas:
+- `train`: 6
+- `train.l`: 6+2
+- `train.xl`: 6+2+2
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/train-size.txt/long-200k/best-train-quality.svg)|![Min Q progression](results/train-size.txt/long-200k/best-train-min-q.svg)|![Max Q progression](results/train-size.txt/long-200k/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/train-size.txt/long-200k/best-test-avg-q.svg)|![Min Q progression](results/train-size.txt/long-200k/best-test-min-q.svg)|![Max Q progression](results/train-size.txt/long-200k/best-test-max-q.svg)|
+
+Final best avg Q on test:
+![Avg Q progression](results/train-size.txt/long-200k/final-best-test-avg-q.svg)
+
+Final min (in the population) avg Q on test:
+![Avg Q progression](results/train-size.txt/long-200k/final-min-test-avg-q.svg)
+
+#### Examples
+For all the three cases, we show the trajectories on the `train.xl` arenas (and the test ones):
+
+`train`
+![Train trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train/best-train-xl-trajs.svg>)
+![Test trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train/best-test-trajs.svg>)
+
+`train.l`
+![Train trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.l/best-train-xl-trajs.svg>)
+![Test trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.l/best-test-trajs.svg>)
+
+`train.xl`
+![Train trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.xl/best-train-xl-trajs.svg>)
+![Test trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.xl/best-test-trajs.svg>)
 
