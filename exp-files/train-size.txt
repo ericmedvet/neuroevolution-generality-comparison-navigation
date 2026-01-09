@@ -1,6 +1,5 @@
-% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal
+% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal, $qFun
 
-$qFun = ds.e.n.finalD()
 $dT = 0.1
 $tRange = m.range(min = 0; max = $tFinal)
 $robotRadius = 0.02
