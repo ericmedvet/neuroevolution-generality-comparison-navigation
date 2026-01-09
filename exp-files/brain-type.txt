@@ -1,0 +1,65 @@
+% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal, $qFun
+
+$dT = 0.1
+$tRange = m.range(min = 0; max = $tFinal)
+$robotRadius = 0.02
+$nOfSensors	= 7
+$qAggregator = f.avg(format = "%6.4f")
+
+@import("imports/arenas.txt")
+@import("imports/problem.txt")
+@import("imports/listeners.txt")
+@import("imports/solvers.txt")
+
+ea.experiment(
+  runs = (randomGenerator = (seed = $seeds)
+    * [m.defaultRG()])
+    * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
+    * [
+        ea.s.ga(
+          name = ''ga-mono-ann'';
+          representation = ea.r.doubleString();
+          mapper = ea.m.enhancedNds(
+            name = ''{of.parametrized}-{windowT}'';
+            of = ea.m.composedNds(
+              of = ea.m.dsToParametrized(parametrized = ds.num.mlp(innerLayers = [8; 8; 8]));
+              then = ds.num.fromFunctions(functions = [
+                ea.f.numExpr(expr = "+(1;*(2;min(0;x0)))");
+                ea.f.numExpr(expr = "-(1;*(2;max(0;x0)))")
+              ]);
+              nOfInternalIOs = 1
+            );
+            windowT = 0.5
+          )
+        );
+        ea.s.ga(
+          name = ''ga-mono-tree'';
+          representation = ea.r.srTree(
+            ephemeral = true;
+            operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt]
+          );
+          mapper = ea.m.enhancedNds(
+            name = ''{of.parametrized}-{windowT}'';
+            of = ea.m.composedNds(
+              of = ea.m.nurfToNds(of = ea.m.srTreeToNurf());
+              then = ds.num.fromFunctions(functions = [
+                ea.f.numExpr(expr = "+(1;*(2;min(0;tanh(x0))))");
+                ea.f.numExpr(expr = "-(1;*(2;max(0;tanh(x0))))")
+              ]);
+              nOfInternalIOs = 1
+            );
+            windowT = 0.5
+          )
+        )
+      ])
+    * (problem = [$problemXL])
+    * [ea.run()];
+  listeners = [
+    $consoleL;
+    $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
+    $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
+    $finalTrainQPlotL; $finalTestQPlotL; $finalMinTestQPlotL;
+    $bestTrainXLTrajsSaverL; $bestTestTrajsSaverL;
+    $archivesP
+  ]
+)

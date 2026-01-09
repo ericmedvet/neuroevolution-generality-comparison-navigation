@@ -6,6 +6,7 @@ $allTrainOutcomesF = f.each(mapF = $qFun; of = ea.f.quality(of = ea.f.best()))
 
 $consoleL = ea.l.console(
   eFunctions = [
+    ea.f.size(of = ea.f.genotype(of = ea.f.best()));
     f.composition(of = $allTrainOutcomesF; then = $qAggregator)
   ];
   onlyLast = false
