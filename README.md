@@ -292,3 +292,16 @@ high-low archive individual on training:
 high-high archive individual on training:
 ![Train trajectories](results/ea.txt/long/me.behav-01/archive-hh-train-trajs.svg)
 
+### Experiment: impact of mutation sigma
+```shell
+java \
+  -jar jgea.jar \
+  -nt 16 -nr 4 \
+  -f exp-files/train-size.txt \
+  --expHeadLines \
+    '$qFun = ds.e.n.avgD()' \
+    '$tFinal = 60' \
+    '$nOfEvals = 200000' \
+    '$seeds = [1:1:10]'
+```
+
