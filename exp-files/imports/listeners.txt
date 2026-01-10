@@ -2,7 +2,7 @@ $basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
 $imgType = svg
 $showSensors = true
 
-$allTrainOutcomesF = f.each(mapF = $qFun; of = ea.f.quality(of = ea.f.best()))
+$allTrainOutcomesF = f.each(mapF = $cachedQFun; of = ea.f.quality(of = ea.f.best()))
 
 $consoleL = ea.l.console(
   eFunctions = [
@@ -39,20 +39,16 @@ $trainMaxQPlotL = ea.l.savePlotForExp(
   type = $imgType
 )
 
-$trainSims = (environment = (arena = $trainArenas)
+$trainSims = (environment = (arena = $trainPlotArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
 
-$trainSimsXL = (environment = (arena = $trainArenasXL)
-* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
-* [ds.sat.fromEnvironment()]
-
-$testSims = (environment = (arena = $testArenas)
+$testSims = (environment = (arena = $testPlotArenas)
 * [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
 * [ds.sat.fromEnvironment()]
 
 $allTestOutcomesF = f.cached(of = f.each(
-  mapF = $qFun;
+  mapF = $cachedQFun;
   of = f.as(
     name = "test.arenas";
     of = f.all(
@@ -102,19 +98,6 @@ $bestTrainTrajsSaverL = ea.l.saveForRun(
   )
 )
 
-$bestTrainXLTrajsSaverL = ea.l.saveForRun(
-  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-train-xl-trajs." + $imgType;
-  of = ea.acc.lastBest();
-  processor = viz.f.toMultiImage(
-    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
-    of = f.all(
-      of = ea.f.solution();
-      fs = (simulation = $trainSimsXL) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
-    );
-    type = $imgType
-  )
-)
-
 $bestTestTrajsSaverL = ea.l.saveForRun(
   path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-test-trajs." + $imgType;
   of = ea.acc.lastBest();
@@ -154,7 +137,7 @@ $finalMinTestQPlotL = ea.l.savePlotForExp(
 $archivesP = ea.l.savePlotForRun(
   path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/me-archives." + $imgType;
   plot = ea.plot.single.me(values = [
-    f.composition(of = f.each(of = ea.f.quality(); mapF = $qFun); then = $qAggregator);
+    f.composition(of = f.each(of = ea.f.quality(); mapF = $cachedQFun); then = $qAggregator);
     f.avg(of = $allTestOutcomesF)
   ]);
   kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*");

@@ -8,6 +8,10 @@ $qAggregator = f.avg(format = "%6.4f")
 
 @import("imports/arenas.txt")
 @import("imports/problem.txt")
+
+$trainPlotArenas = $trainArenasXL
+$testPlotArenas = $testArenas
+
 @import("imports/listeners.txt")
 @import("imports/solvers.txt")
 
@@ -29,7 +33,7 @@ ea.experiment(
     $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
     $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
     $finalTrainQPlotL; $finalTestQPlotL; $finalMinTestQPlotL;
-    $bestTrainXLTrajsSaverL; $bestTestTrajsSaverL;
+    $bestTrainTrajsSaverL; $bestTestTrajsSaverL;
     $archivesP
   ]
 )

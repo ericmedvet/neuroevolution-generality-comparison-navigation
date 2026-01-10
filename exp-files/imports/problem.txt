@@ -7,11 +7,11 @@ $simToTo = ea.p.simToTo(
   dT = $dT;
   tRange = $tRange;
   qFunction = f.identity();
-  comparator = ea.comparator.ascending(of = f.cached(of = $qFun))
+  comparator = ea.comparator.ascending(of = $cachedQFun)
 )
 
 $comparator = ea.comparator.ascending(of = f.composition(
-  of = f.each(mapF = $qFun);
+  of = f.each(mapF = $cachedQFun);
   then = $qAggregator
 ))
 

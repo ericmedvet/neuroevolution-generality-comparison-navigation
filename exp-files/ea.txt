@@ -9,6 +9,10 @@ $qAggregator = f.avg(format = "%6.4f")
 
 @import("imports/arenas.txt")
 @import("imports/problem.txt")
+
+$trainPlotArenas = $trainArenas
+$testPlotArenas = $testArenas
+
 @import("imports/listeners.txt")
 @import("imports/solvers.txt")
 

@@ -341,3 +341,45 @@ For all the three cases, we show the trajectories on the `train.xl` arenas (and 
 ![Train trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.xl/best-train-xl-trajs.svg>)
 ![Test trajectories](<results/train-size.txt/long-200k/ga-[8, 8, 8]-0.5-01/train.xl/best-test-trajs.svg>)
 
+### Experiment: impact of brain type
+```shell
+java \
+  -jar jgea.jar \
+  -nt 16 -nr 4 \
+  -f exp-files/brain-type.txt \
+  --expHeadLines \
+    '$qFun = ds.e.n.avgD()' \
+    '$tFinal = 60' \
+    '$nOfEvals = 40000' \
+    '$seeds = [1:1:10]'
+```
+
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/brain-type.txt/best-train-quality.svg)|![Min Q progression](results/brain-type.txt/best-train-min-q.svg)|![Max Q progression](results/brain-type.txt/best-train-max-q.svg)|
+
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/brain-type.txt/best-test-avg-q.svg)|![Min Q progression](results/brain-type.txt/best-test-min-q.svg)|![Max Q progression](results/brain-type.txt/best-test-max-q.svg)|
+
+Final best avg Q on test:
+![Avg Q progression](results/brain-type.txt/final-best-test-avg-q.svg)
+
+Final min (in the population) avg Q on test:
+![Avg Q progression](results/brain-type.txt/final-min-test-avg-q.svg)
+
+### Experiment: different train/test arenas
+```shell
+java \
+  -jar jgea.jar \
+  -nt 16 -nr 4 \
+  -f exp-files/progressive.txt \
+  --expHeadLines \
+    '$tFinal = 60' \
+    '$nOfEvals = 40000' \
+    '$seeds = [1:1:10]'
+```
+
+

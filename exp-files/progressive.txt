@@ -1,16 +1,52 @@
-% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal, $qFun
+% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal
 
 $dT = 0.1
 $tRange = m.range(min = 0; max = $tFinal)
 $robotRadius = 0.02
-$nOfSensors	= 7
+$nOfSensors	= 5
 $qAggregator = f.avg(format = "%6.4f")
-$cachedQFun = f.cached(of = $qFun)
+$cachedQFun = f.cached(of = ea.f.numExpr(
+  expr = "+(*(0.1;ad);*(0.9;fd))";
+  args = [
+    ds.e.n.avgD();
+    ds.e.n.finalD()
+  ]
+))
 
 @import("imports/arenas.txt")
 @import("imports/problem.txt")
+
+$trainPlotArenas = $trainProgressive
+$testPlotArenas = $testProgressive
+
 @import("imports/listeners.txt")
 @import("imports/solvers.txt")
+
+$monoAnnMapper = ea.m.enhancedNds(
+  name = ''mono-ann-{windowT}'';
+  of = ea.m.composedNds(
+    of = ea.m.dsToParametrized(parametrized = ds.num.mlp(innerLayers = [8; 8; 8]));
+    then = ds.num.fromFunctions(functions = [
+      ea.f.numExpr(expr = "+(1;*(2;min(0;x0)))");
+      ea.f.numExpr(expr = "-(1;*(2;max(0;x0)))")
+    ]);
+    nOfInternalIOs = 1
+  );
+  windowT = 0.5
+)
+
+$monoTreeMapper = ea.m.enhancedNds(
+  name = ''mono-tree-{windowT}'';
+  of = ea.m.composedNds(
+    of = ea.m.nurfToNds(of = ea.m.srTreeToNurf());
+    then = ds.num.fromFunctions(functions = [
+      ea.f.numExpr(expr = "+(1;*(2;min(0;tanh(x0))))");
+      ea.f.numExpr(expr = "-(1;*(2;max(0;tanh(x0))))")
+    ]);
+    nOfInternalIOs = 1
+  );
+  windowT = 0.5
+)
 
 ea.experiment(
   runs = (randomGenerator = (seed = $seeds)
@@ -18,49 +54,55 @@ ea.experiment(
     * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
     * [
         ea.s.ga(
-          name = ''ga-mono-ann'';
+          name = ''ga-{mapper.name}'';
           representation = ea.r.doubleString();
-          mapper = ea.m.enhancedNds(
-            name = ''{of.parametrized}-{windowT}'';
-            of = ea.m.composedNds(
-              of = ea.m.dsToParametrized(parametrized = ds.num.mlp(innerLayers = [8; 8; 8]));
-              then = ds.num.fromFunctions(functions = [
-                ea.f.numExpr(expr = "+(1;*(2;min(0;x0)))");
-                ea.f.numExpr(expr = "-(1;*(2;max(0;x0)))")
-              ]);
-              nOfInternalIOs = 1
-            );
-            windowT = 0.5
-          )
+          mapper = $monoAnnMapper
+        );
+        ea.s.mapElites(
+          name = ''me.dpos-{mapper.name}'';
+          representation = ea.r.doubleString();
+          mapper = $monoAnnMapper;
+          descriptors = (nOfBins = 10) * [
+            ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalDX)); min = -0.25; max = 0.25);
+            ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalDY)); min = -0.25; max = 0.25)
+          ]
         );
         ea.s.ga(
-          name = ''ga-mono-tree'';
+          name = ''ga-{mapper.name}'';
           representation = ea.r.srTree(
             ephemeral = true;
             operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt; ternary]
           );
-          mapper = ea.m.enhancedNds(
-            name = ''{of.parametrized}-{windowT}'';
-            of = ea.m.composedNds(
-              of = ea.m.nurfToNds(of = ea.m.srTreeToNurf());
-              then = ds.num.fromFunctions(functions = [
-                ea.f.numExpr(expr = "+(1;*(2;min(0;tanh(x0))))");
-                ea.f.numExpr(expr = "-(1;*(2;max(0;tanh(x0))))")
-              ]);
-              nOfInternalIOs = 1
-            );
-            windowT = 0.5
-          )
+          mapper = $monoTreeMapper
+        );
+        ea.s.mapElites(
+          name = ''me.dpos-{mapper.name}'';
+          representation = ea.r.srTree(
+            ephemeral = true;
+            operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt; ternary]
+          );
+          mapper = $monoTreeMapper;
+          descriptors = (nOfBins = 10) * [
+            ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalDX)); min = -0.25; max = 0.25);
+            ea.s.me.d.descriptor(f = f.avg(of = f.each(of = ea.f.quality(); mapF = $finalDY)); min = -0.25; max = 0.25)
+          ]
         )
       ])
-    * (problem = [$problemXL])
+    * (problem = ea.p.manyToCbto(
+        name = "train.progressive";
+        problems = (simulation = (environment = (arena = $trainProgressive)
+        * [$environment])
+        * [ds.sat.fromEnvironment()])
+        * [$simToTo];
+        comparator = $comparator
+      ))
     * [ea.run()];
   listeners = [
     $consoleL;
     $trainQPlotL; $trainMinQPlotL; $trainMaxQPlotL;
     $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
     $finalTrainQPlotL; $finalTestQPlotL; $finalMinTestQPlotL;
-    $bestTrainXLTrajsSaverL; $bestTestTrajsSaverL;
+    $bestTrainTrajsSaverL; $bestTestTrajsSaverL;
     $archivesP
   ]
 )
