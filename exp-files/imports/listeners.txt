@@ -1,14 +1,15 @@
 $basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
 $imgType = svg
 $showSensors = true
-$deferred = true
+$deferred = false
 
 $allTrainOutcomesF = f.each(mapF = $cachedQFun; of = ea.f.quality(of = ea.f.best()))
 
 $consoleL = ea.l.console(
   eFunctions = [
     ea.f.size(of = ea.f.genotype(of = ea.f.best()));
-    f.composition(of = $allTrainOutcomesF; then = $qAggregator)
+    f.composition(of = $allTrainOutcomesF; then = $qAggregator);
+    f.timestamp()
   ];
   onlyLast = false
 )
