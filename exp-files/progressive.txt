@@ -5,13 +5,13 @@ $tRange = m.range(min = 0; max = $tFinal)
 $robotRadius = 0.02
 $nOfSensors	= 5
 $qAggregator = f.avg(format = "%6.4f")
-$cachedQFun = f.cached(of = ea.f.numExpr(
+$cachedQFun = ea.f.numExpr(
   expr = "+(*(0.1;ad);*(0.9;fd))";
   args = [
     ds.e.n.avgD();
     ds.e.n.finalD()
   ]
-))
+)
 
 @import("imports/arenas.txt")
 @import("imports/problem.txt")

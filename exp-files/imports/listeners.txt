@@ -1,6 +1,7 @@
 $basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
 $imgType = svg
 $showSensors = true
+$deferred = true
 
 $allTrainOutcomesF = f.each(mapF = $cachedQFun; of = ea.f.quality(of = ea.f.best()))
 
@@ -18,6 +19,7 @@ $trainQPlotL = ea.l.savePlotForExp(
     y = f.composition(of = $allTrainOutcomesF; then = $qAggregator);
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
@@ -27,6 +29,7 @@ $trainMinQPlotL = ea.l.savePlotForExp(
     y = f.min(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
@@ -36,6 +39,7 @@ $trainMaxQPlotL = ea.l.savePlotForExp(
     y = f.max(of = $allTrainOutcomesF);
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
@@ -64,6 +68,7 @@ $testAvgQPlotL = ea.l.savePlotForExp(
     y = f.avg(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
@@ -73,6 +78,7 @@ $testMinQPlotL = ea.l.savePlotForExp(
     y = f.min(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
@@ -82,6 +88,7 @@ $testMaxQPlotL = ea.l.savePlotForExp(
     y = f.max(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
     yRange = m.range(min = 0; max = 1)
   );
+  deferred = $deferred;
   type = $imgType
 )
 
