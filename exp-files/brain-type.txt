@@ -36,7 +36,7 @@ ea.experiment(
           name = ''ga-mono-tree'';
           representation = ea.r.srTree(
             ephemeral = true;
-            operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt]
+            operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt; ternary]
           );
           mapper = ea.m.enhancedNds(
             name = ''{of.parametrized}-{windowT}'';
