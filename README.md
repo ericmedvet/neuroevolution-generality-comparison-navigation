@@ -371,6 +371,18 @@ Final min (in the population) avg Q on test:
 ![Avg Q progression](results/brain-type.txt/final-min-test-avg-q.svg)
 
 ### Experiment: different train/test arenas
+These setting appear to work:
+- training arenas: many and harder (wrt to test ones)
+- test arenas: easy
+- agent: 5+2 inputs (with 3x given by enhancement with trend and average in the last 0.5s), 1 output
+- representation: tree (violet and green in the plots below)
+- EA: Map-Elites with final x- and y-gap to target as descriptors (averaged across training arenas) (blue and green in the plots below)
+
+Findings:
+- all test arenas are solved in ~10k fitness evaluations
+- most train arenas are solved in ~40k, with the two hardest ones (the mazes) "almost" solved
+- the specific combination of Map-Elites and tree based agent is clearly better than the others
+
 ```shell
 java \
   -jar jgea.jar \
@@ -382,4 +394,26 @@ java \
     '$seeds = [1:1:10]'
 ```
 
+On training arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/progressive.txt/best-train-quality.svg)|![Min Q progression](results/progressive.txt/best-train-min-q.svg)|![Max Q progression](results/progressive.txt/best-train-max-q.svg)|
 
+On test arenas:
+|Avg Q|Min Q|Max Q|
+|-----|-----|-----|
+|![Avg Q progression](results/progressive.txt/best-test-avg-q.svg)|![Min Q progression](results/progressive.txt/best-test-min-q.svg)|![Max Q progression](results/progressive.txt/best-test-max-q.svg)|
+
+Final:
+|Best on train|Best on test|Min on test|
+|-----|-----|-----|
+|![Avg Q progression](results/progressive.txt/final-best-train-quality.svg)|![Avg Q progression](results/progressive.txt/final-best-test-avg-q.svg)|![Avg Q progression](results/progressive.txt/final-min-test-avg-q.svg)|
+
+#### Examples and archive with the winning option (ME + tree)
+
+Best:
+![Train trajectories](<results/progressive.txt/me.dpos-mono-tree-0.5-01/train.progressive/best-train-trajs.svg>)
+![Test trajectories](<results/progressive.txt/me.dpos-mono-tree-0.5-01/train.progressive/best-test-trajs.svg>)
+
+Archive:
+![Archive](results/progressive.txt/me.dpos-mono-tree-0.5-01/train.progressive/me-archives.svg)
