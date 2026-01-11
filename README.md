@@ -374,6 +374,7 @@ Final min (in the population) avg Q on test:
 These setting appear to work:
 - training arenas: many and harder (wrt to test ones)
 - test arenas: easy
+- fitness: 0.1 * average distance + 0.9 * final distance (averaged across training arenas)
 - agent: 5+2 inputs (with 3x given by enhancement with trend and average in the last 0.5s), 1 output
 - representation: tree (violet and green in the plots below)
 - EA: Map-Elites with final x- and y-gap to target as descriptors (averaged across training arenas) (blue and green in the plots below)

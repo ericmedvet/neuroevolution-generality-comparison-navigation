@@ -1,0 +1,151 @@
+$basePath = ''./exp-results/{^^.name}/{^^.startTime}/''
+$imgType = svg
+$showSensors = true
+$deferred = false
+
+$consoleL = ea.l.console(
+  eFunctions = [
+    ea.f.size(of = ea.f.genotype(of = ea.f.best()));
+    f.mapValue(key = q; of = ea.f.quality(of = ea.f.best()); format = "%6.4f");
+    f.timestamp()
+  ];
+  onlyLast = false
+)
+
+$trainQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "best-train-quality." + $imgType;
+  plot = ea.plot.multi.quality(
+    q = f.mapValue(key = q);
+    yRange = m.range(min = 0; max = 1)
+  );
+  deferred = $deferred;
+  type = $imgType
+)
+
+$trainSims = (environment = (arena = $trainPlotArenas)
+* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
+* [ds.sat.fromEnvironment()]
+
+$testSims = (environment = (arena = $testPlotArenas)
+* [ds.e.navigation(nOfSensors = $nOfSensors; robotRadius = $robotRadius)])
+* [ds.sat.fromEnvironment()]
+
+$allTestOutcomesF = f.cached(of = f.each(
+  mapF = $qFun;
+  of = f.as(
+    name = "test.arenas";
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    )
+  )
+))
+
+$testAvgQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "best-test-avg-q." + $imgType;
+  plot = ea.plot.multi.xyExp(
+    y = f.avg(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
+    yRange = m.range(min = 0; max = 1)
+  );
+  deferred = $deferred;
+  type = $imgType
+)
+
+$testMinQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "best-test-min-q." + $imgType;
+  plot = ea.plot.multi.xyExp(
+    y = f.min(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
+    yRange = m.range(min = 0; max = 1)
+  );
+  deferred = $deferred;
+  type = $imgType
+)
+
+$testMaxQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "best-test-max-q." + $imgType;
+  plot = ea.plot.multi.xyExp(
+    y = f.max(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF));
+    yRange = m.range(min = 0; max = 1)
+  );
+  deferred = $deferred;
+  type = $imgType
+)
+
+$bestTrainTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-train-trajs." + $imgType;
+  of = ea.acc.lastBest();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $trainSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  )
+)
+
+$bestTestTrajsSaverL = ea.l.saveForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/best-test-trajs." + $imgType;
+  of = ea.acc.lastBest();
+  processor = viz.f.toMultiImage(
+    drawer = ds.d.navigation(ioType = off; showSensors = $showSensors);
+    of = f.all(
+      of = ea.f.solution();
+      fs = (simulation = $testSims) * [ds.f.simulate(dT = $dT; tRange = $tRange)]
+    );
+    type = $imgType
+  )
+)
+
+$finalTrainQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-best-train-quality." + $imgType;
+  plot = ea.plot.multi.qualityBoxplot(q = f.mapValue(key = q));
+  type = $imgType
+)
+
+$finalTestQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-best-test-avg-q." + $imgType;
+  plot = ea.plot.multi.yBoxplotExp(y = f.avg(of = f.composition(of = ea.f.best(); then = $allTestOutcomesF)));
+  type = $imgType
+)
+
+$finalMinTestQPlotL = ea.l.savePlotForExp(
+  path = $basePath + "final-min-test-avg-q." + $imgType;
+  plot = ea.plot.multi.yBoxplotExp(
+    y = f.min(of = f.each(
+      of = ea.f.all();
+      mapF = f.avg(of = $allTestOutcomesF) 
+    ))
+  );
+  type = $imgType
+)
+
+$archivesP = ea.l.savePlotForRun(
+  path = $basePath + "{solver.name}-{randomGenerator.seed:%02d}/{problem.name}/me-archives." + $imgType;
+  plot = ea.plot.single.me(values = [
+    f.mapValue(key = q; of = ea.f.quality());
+    f.avg(of = $allTestOutcomesF);
+    f.max(of = $allTestOutcomesF)
+  ]);
+  kCondition = predicate.matches(f = f.mappableKey(key = "solver.name"); regex = "me.*");
+  type = $imgType
+)
+
+$allCsv = ea.listener.allCsv(
+  path = $basePath + "all-final.txt";
+  onlyLast = true;
+  individualFunctions = [
+    ea.f.size(of = ea.f.genotype());
+    f.mapValue(key = q; of = ea.f.quality());
+    f.mapValue(key = dx; of = ea.f.quality());
+    f.mapValue(key = dy; of = ea.f.quality());
+    f.as(name = "test.avg.q"; of = f.avg(of = $allTestOutcomesF))
+  ]
+  + (of = (simulation = $trainSims)
+    * [ds.f.simulate(dT = $dT; tRange = $tRange; of = ea.f.solution())])
+    * [f.composition(then = $qFun)]
+  + (of = (simulation = $testSims)
+    * [ds.f.simulate(dT = $dT; tRange = $tRange; of = ea.f.solution())])
+    * [f.composition(then = $qFun)]
+)
+

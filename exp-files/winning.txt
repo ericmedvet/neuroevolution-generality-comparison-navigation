@@ -1,0 +1,102 @@
+% REQUIRED CMD-LINE PARAMS: $seeds, $nOfEvals, $tFinal
+
+$dT = 0.1
+$tRange = m.range(min = 0; max = $tFinal)
+$robotRadius = 0.02
+$nOfSensors	= 5
+$qAggregator = f.avg(format = "%6.4f")
+
+$qFun = ea.f.numExpr(
+  expr = "+(*(0.1;ad);*(0.9;fd))";
+  args = [
+    ds.e.n.avgD();
+    ds.e.n.finalD()
+  ]
+)
+$finalDX = ea.f.numExpr(
+  expr = "-(frx;ftx)";
+  args = [
+    ds.e.n.x(of = ds.e.n.finalRobotP());
+    ds.e.n.x(of = ds.e.n.finalTargetP())
+  ]
+)
+$finalDY = ea.f.numExpr(
+  expr = "-(fry;fty)";
+  args = [
+    ds.e.n.y(of = ds.e.n.finalRobotP());
+    ds.e.n.y(of = ds.e.n.finalTargetP())
+  ]
+)
+
+@import("imports/arenas.txt")
+
+$trainPlotArenas = $trainProgressive
+$testPlotArenas = $testProgressive
+
+$problem = ea.p.manyToCbto(
+  name = "train.progressive";
+  problems = (simulation = (environment = (arena = $trainProgressive)
+    * [ds.e.navigation(
+        nOfSensors = $nOfSensors;
+        robotRadius = $robotRadius
+      )])
+    * [ds.sat.fromEnvironment()])
+    * [ea.p.simToTo(
+        dT = $dT;
+        tRange = $tRange;
+        qFunction = f.identity();
+        comparator = ea.comparator.ascending(of = $qFun)
+      )];
+  aggregator = f.allNamed(fs = m.sKeyMap(
+    keys = [q; dx; dy];
+    values = (of = (mapF = [$qFun; $finalDX; $finalDY]) * [f.each()]) * [f.avg()]
+  ));
+  comparator = ea.comparator.ascending(of = f.mapValue(key = q))
+)
+
+@import("imports/listeners-winning.txt")
+
+$monoTreeMapper = ea.m.enhancedNds(
+  name = ''mono-tree-{windowT}'';
+  of = ea.m.composedNds(
+    of = ea.m.nurfToNds(of = ea.m.srTreeToNurf());
+    then = ds.num.fromFunctions(functions = [
+      ea.f.numExpr(expr = "+(1;*(2;min(0;tanh(x0))))");
+      ea.f.numExpr(expr = "-(1;*(2;max(0;tanh(x0))))")
+    ]);
+    nOfInternalIOs = 1
+  );
+  windowT = 0.5
+)
+
+ea.experiment(
+  runs = (randomGenerator = (seed = $seeds)
+    * [m.defaultRG()])
+    * (solver = (stop = ea.sc.nOfQualityEvaluations(n = $nOfEvals))
+    * [
+        ea.s.mapElites(
+          name = ''me.dpos-{mapper.name}'';
+          representation = ea.r.srTree(
+            ephemeral = true;
+            operators = [addition; subtraction; multiplication; prot_division; prot_log; max; min; tanh; gt; lt; ternary]
+          );
+          mapper = $monoTreeMapper;
+          descriptors = (nOfBins = 10)
+            * [
+              ea.s.me.d.descriptor(f = f.mapValue(key = dx; of = ea.f.quality()); min = -0.25; max = 0.25);
+              ea.s.me.d.descriptor(f = f.mapValue(key = dy; of = ea.f.quality()); min = -0.25; max = 0.25)
+            ]
+        )
+      ])
+    * (problem = $problem)
+    * [ea.run()];
+  listeners = [
+    $consoleL;
+    $trainQPlotL;
+    $testAvgQPlotL; $testMinQPlotL; $testMaxQPlotL;
+    $finalTrainQPlotL; $finalTestQPlotL; $finalMinTestQPlotL;
+    $bestTrainTrajsSaverL; $bestTestTrajsSaverL;
+    $archivesP;
+    $allCsv
+  ]
+)
