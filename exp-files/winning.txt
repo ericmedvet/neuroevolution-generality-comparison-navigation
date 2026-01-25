@@ -47,10 +47,18 @@ $problem = ea.p.manyToCbto(
         qFunction = f.identity();
         comparator = ea.comparator.ascending(of = $qFun)
       )];
-  aggregator = f.allNamed(fs = m.sKeyMap(
-    keys = [q; dx; dy];
-    values = (of = (mapF = [$qFun; $finalDX; $finalDY]) * [f.each()]) * [f.avg()]
-  ));
+  aggregator = f.namedMerged(
+    mappers = [
+      f.allNamed(fs = m.sKeyMap(
+        keys = [q];
+        values = (of = (mapF = [$qFun]) * [f.each()]) * [f.avg()]
+      ));
+      f.allNamed(fs = m.sKeyMap(
+        keys = [dx; dy];
+        values = (of = (mapF = [$finalDX; $finalDY]) * [f.each()]) * [f.avg()]
+      ))
+    ]
+  );
   comparator = ea.comparator.ascending(of = f.mapValue(key = q))
 )
 
